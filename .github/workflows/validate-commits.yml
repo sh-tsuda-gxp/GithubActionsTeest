@@ -1,0 +1,19 @@
+name: validate-commits
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  validate-commits:
+    runs-on: ubuntu-latest
+    # skip branches created by dependabot
+    if: startsWith(github.head_ref, 'dependabot/') == false
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{github.event.pull_request.head.ref}}
+      - name: Commitsar check
+        uses: docker://aevea/commitsar
